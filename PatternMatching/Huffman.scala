@@ -1,9 +1,5 @@
 package PatternMatching
 
-/**
- * Assignment 4: Huffman coding
- *
- */
 object Huffman {
   val BIT_L: Int = 0
   val BIT_R: Int = 1
