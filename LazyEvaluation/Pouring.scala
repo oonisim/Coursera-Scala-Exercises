@@ -35,24 +35,29 @@ object PouringTest extends App {
     //----------------------------------------------------------------------
     // Available actions
     //----------------------------------------------------------------------    
-    val numcups = capacities.length
+    val numcups = (0 until capacities.length)
     val actions =
-      (for (cup <- (0 until numcups)) yield Empty(cup)) ++
-        (for (cup <- (0 until numcups)) yield Fill(cup)) ++
-        (for (from <- (0 until numcups); to <- (0 until numcups) if (to != from)) yield new Pour(from, to))
+      (for (cup <- numcups) yield Empty(cup)) ++
+        (for (cup <- numcups) yield Fill(cup)) ++
+        (for (from <- numcups; to <- numcups if (to != from)) yield new Pour(from, to))
 
     //----------------------------------------------------------------------
     // Possible states after repeating transitions.
     //----------------------------------------------------------------------
-    def transitions(states: Set[State]): Stream[Set[State]] = {
+    def transitions(states: Set[State], identified: Set[State]): Stream[Set[State]] = {
       if (states.isEmpty) Stream.empty
       else {
         val child = for {
           state <- states
           action <- actions
+          /*
+           * With guard,    elapsed time: 0.077111888s for taking pow 2^10 result. 
+           * Without guard, elapsed time: 0.326833628s for taking pow 2^10 result. 
+           */
+          if (!identified.contains(action.next(state)))
         } yield action.next(state)
-        println(child)
-        (child #:: transitions(child))
+        //println(child)
+        (child #:: transitions(child, identified ++ child))
       }
     }
     //----------------------------------------------------------------------
@@ -60,15 +65,27 @@ object PouringTest extends App {
     // ... Need to know what steps will yield the result.
     //----------------------------------------------------------------------
     def test(target: Int): Stream[State] = for {
-        states <- transitions(Set(initialState))
-        state <- states
-        amount <- state if (amount == target)
+      states <- transitions(Set(initialState), Set(initialState))
+      state <- states
+      amount <- state if (amount == target)
 
-      } yield {
-        state
-      }
+    } yield {
+      state
+    }
   }
-  val p = new Pouring(Vector(3, 5, 9))
-  println(p.actions)
-  println(p.test(7).take(2).toList)
+  def time[R](block: => R): R = {
+    val t0 = System.nanoTime()
+    val result = block // call-by-name
+    val t1 = System.nanoTime()
+    println("Elapsed time: " + (t1 - t0) / Math.pow(10, 9) + "s")
+    result
+  }
+
+  //println(p.actions)
+  val i = 10
+  print("For pow %d ".format(i))
+  time {
+    var p = new Pouring(Vector(3, 5, 9))
+    p.test(7).take(Math.pow(2, i).toInt).toList
+  }
 }
