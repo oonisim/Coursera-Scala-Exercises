@@ -21,7 +21,7 @@ object NQuseen extends App {
       //val left = (0 until row).map(j => placement(j) + (row - j)).toSet
       //val left = (0 until row).map(j => placement(j) - (row - j)).toSet
       val right = for (j <- (0 until row) if (placement(j) + (row - j) < n)) yield placement(j) + (row - j)
-      val left  = for(j <- (0 until row) if(placement(j) - (row - j) >= 0)) yield (placement(j) - (row - j))
+      val left  = for(j <- (0 until row) if(placement(j) - (row - j) >= 0)) yield placement(j) - (row - j)
       val all = (0 until n).toSet
       val taken = (placement.toSet ++ left.toSet ++ right.toSet)
       if ((all -- taken).contains(column)) true
