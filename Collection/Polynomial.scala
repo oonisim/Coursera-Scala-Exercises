@@ -14,7 +14,7 @@ object Polynomial {
     val terms = terms0 withDefaultValue 0.0
 
     //--------------------------------------------------------------------------------
-    // Polynomial number addtion
+    // Polynomial number addition
     //--------------------------------------------------------------------------------
     def +(other: Poly) = {
       def addTerm(terms: Map[Int, Double], term: (Int, Double)): Map[Int, Double] = {
@@ -22,7 +22,7 @@ object Polynomial {
         val (exp, coeff) = term
         //--------------------------------------------------------------------------------
         // Get the coefficient for the exponential from this side.
-        // Add this.coefficient and other.coefficient for the expontial.
+        // Add this.coefficient and other.coefficient for the expnontial.
         //--------------------------------------------------------------------------------
         terms.updated(exp, (terms(exp) + coeff))
       }

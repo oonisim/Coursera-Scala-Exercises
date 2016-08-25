@@ -13,16 +13,17 @@ object NQuseen extends App {
       // [Logic]
       // Find if there are available columns for a queen to be placed at the current 'row'.
       // The columns where queens have been placed (placement(j) where j: (0 until row)) are taken.
-      // The left  diagonal columns for all placement(j), which is placement(j) + (row -j)), are taken.
-      // The right diagonal columns for all placement(j), which is placement(j) - (row -j)), are taken.
+      // The right diagonal columns for all placement(j), which is placement(j) + (row -j)), are taken.
+      // The left  diagonal columns for all placement(j), which is placement(j) - (row -j)), are taken.
       // If there are available columns left which include the target 'column', then true.
       //--------------------------------------------------------------------------------
       val row = placement.length
-      val left = (0 until row).map(j => placement(j) + (row - j)).toSet
-      val right = (0 until row).map(j => placement(j) - (row - j)).toSet
-
+      //val left = (0 until row).map(j => placement(j) + (row - j)).toSet
+      //val left = (0 until row).map(j => placement(j) - (row - j)).toSet
+      val right = for (j <- (0 until row) if (placement(j) + (row - j) < n)) yield placement(j) + (row - j)
+      val left  = for(j <- (0 until row) if(placement(j) - (row - j) >= 0)) yield (placement(j) - (row - j))
       val all = (0 until n).toSet
-      val taken = (placement.toSet ++ left ++ right)
+      val taken = (placement.toSet ++ left.toSet ++ right.toSet)
       if ((all -- taken).contains(column)) true
       else false
     }
@@ -60,7 +61,7 @@ object NQuseen extends App {
   //--------------------------------------------------------------------------------
   def visualize(placement: List[Int]) = {
     val lines = for (col <- placement) yield Vector.fill(placement.length)("*").updated(col, "X").mkString
-    println ("-----\n" + (lines mkString "\n"))
+    println("-----\n" + (lines mkString "\n"))
   }
 
   //--------------------------------------------------------------------------------
