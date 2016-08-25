@@ -1,3 +1,8 @@
+//----------------------------------------------------------------------
+// Coursera Functional Program Design in Scala 
+// https://www.coursera.org/learn/progfun2/lecture/EkEqR/lecture-2-5-case-study-the-water-pouring-problem 
+//----------------------------------------------------------------------
+
 package LazyEvaluation
 
 object PouringTest extends App {
